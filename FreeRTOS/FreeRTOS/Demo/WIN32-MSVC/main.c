@@ -80,6 +80,9 @@
  * demo application will be built.  The comprehensive test and demo application is
  * implemented and described in main_full.c. */
 #define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
+#define LAB_1 0
+
+
 
 /* This demo uses heap_5.c, and these constants define the sizes of the regions
  * that make up the total heap.  heap_5 is only used for test and example purposes
@@ -181,18 +184,23 @@ static HANDLE xWindowsKeyboardInputThreadHandle = NULL;
 static int xKeyPressed = mainNO_KEY_PRESS_VALUE;
 
 /*-----------------------------------------------------------*/
+#define PRINT_TIMEOUT 1000
+#define SYMBOL_PRINT_TIMEOUT 10
+void PrintTask(void *pvParameters)
+{
+    const char *text = (const char *)pvParameters;
 
-void sayhi(void) {
-    for (;;) {
-        printf("\r\n\ hi");
-        vTaskDelay(1000);
-    }
-}
+    for(;;)
+    {
+        for (size_t i = 0; i < strlen(text); i++)
+        {
+            putchar(text[i]);
+            fflush(stdout);
+            vTaskDelay(pdMS_TO_TICKS(SYMBOL_PRINT_TIMEOUT)); 
+        }
 
-void sayhi_2(void) {
-    for (;;) {
-        printf("\r\n\ hi 2");
-        vTaskDelay(1000);
+        printf("\n");
+        vTaskDelay(pdMS_TO_TICKS(PRINT_TIMEOUT));
     }
 }
 
@@ -241,11 +249,17 @@ int main( void )
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
     {
         printf( "\nStarting the blinky demo.\r\n" );
-        //main_blinky();
-
-        xTaskCreate( sayhi, "TX", 1204, NULL, 4, NULL );
-        xTaskCreate( sayhi_2, "TX", 1204, NULL, 4, NULL );
-        vTaskStartScheduler();
+        #if (LAB_1 == 0)
+        {
+            main_blinky();
+        }
+        #else
+        {
+            xTaskCreate(PrintTask, "Task1", 1000, "Task1 in operate", 1, NULL);
+            xTaskCreate(PrintTask, "Task2", 1000, "Another Task2 in operate", 1, NULL);
+            vTaskStartScheduler();
+        }
+        #endif
     }
     #else
     {
