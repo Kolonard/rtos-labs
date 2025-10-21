@@ -90,7 +90,7 @@
 #elif (LAB_NUMBER == 3)
     #include "lab3_precode.h"   
 #endif
-
+#include "lab_common.h"
 
 
 

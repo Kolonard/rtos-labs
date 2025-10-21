@@ -44,6 +44,9 @@
     <Filter Include="lab1">
       <UniqueIdentifier>{7b7e0d5a-11a4-468a-9da5-fc11bd3cd59b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lab_common">
+      <UniqueIdentifier>{81732283-6a5d-4ae4-a2a3-f678e9863f73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -172,6 +175,9 @@
     <ClCompile Include="..\..\..\..\lab_1\lab1_precode.c">
       <Filter>lab1</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\lab_common\lab_common.c">
+      <Filter>lab_common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeRTOSConfig.h">
@@ -236,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\lab_1\lab1_precode.h">
       <Filter>lab1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lab_common\lab_common.h">
+      <Filter>lab_common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

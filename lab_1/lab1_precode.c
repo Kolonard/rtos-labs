@@ -9,24 +9,7 @@
 
  /* RTOS LAB includes. */
 #include "lab1_precode.h"
-
-
-static void _printf(uint8_t source, void *input_string) 
-{
-    const char *text = (const char *)input_string;
-    for (size_t i = 0; i < strlen(text); i++)
-    {
-        putchar(text[i]);
-        fflush(stdout);
-
-        #if (configUSE_PREEMPTION == 1)
-            if (source == OS) {
-                vTaskDelay(pdMS_TO_TICKS(SYMBOL_PRINT_TIMEOUT));
-            }
-        #endif
-    }
-    printf("\n");
-}
+#include "lab_common.h"
 
 
 static void PrintTask(void *pvParameters)
@@ -38,12 +21,6 @@ static void PrintTask(void *pvParameters)
             taskYIELD();
         #endif
     }
-}
-
-
-void FlushTask(void)
-{
-    for(;;){}
 }
 
 void RTOSLabSetup(void)
