@@ -57,5 +57,4 @@ dkms.conf
 .vs/
 FreeRTOS/FreeRTOS/Demo/WIN32-MSVC/x64
 FreeRTOS/tools
-FreeRTOS/FreeRTOS/Demo/WIN32-MSVC/WIN32.vcxproj
-FreeRTOS/FreeRTOS/Demo/WIN32-MSVC/WIN32.vcxproj.filters
+
