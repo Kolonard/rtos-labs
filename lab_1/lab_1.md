@@ -6,6 +6,32 @@
 
 ---
 
+## Важные замечания
+
+### Вывод в консоль
+
+Все эффекты, связанные с стурктурой многозадачности **не будут проявляться** при использовании стандартных способов вывода информации.
+Для выввода текста в консоль, используйте `_printf()`.
+
+``` c
+static void _printf(uint8_t source, void *input_string); 
+```
+
+где
+
+- `uint8_t source` - источник вызова. Должно быть `0` или `USER`;
+- `void *input_string` - текстовая строка;
+
+Пример использования функции `_printf()`:
+
+```c
+#include "lab_common.h" 
+_printf(USER, void *input_string); 
+
+```
+
+---
+
 ## Задачи лабораторной работы
 
 1. **Запуск FreeRTOS**  
@@ -51,38 +77,50 @@
 ## Приложение: Пример кода создания задачи и управление многозадачностью
 
 ### Минимальный пример создания задачи
+
 ```c
 #include "FreeRTOS.h"
 #include "task.h"
 #include <stdio.h>
+#include "lab_common.h"
 
-#define PRINT_TIMEOUT 10
 
 #define PRINT_TIMEOUT 1000
 #define SYMBOL_PRINT_TIMEOUT 10
-void PrintTask(void *pvParameters)
-{
-    const char *text = (const char *)pvParameters;
 
+static void _printf(uint8_t source, void *input_string) 
+{
+    const char *text = (const char *)input_string;
+    for (size_t i = 0; i < strlen(text); i++)
+    {
+        putchar(text[i]);
+        fflush(stdout);
+
+        #if (configUSE_PREEMPTION == 1)
+            if (source == OS) {
+                vTaskDelay(pdMS_TO_TICKS(SYMBOL_PRINT_TIMEOUT));
+            }
+        #endif
+    }
+    printf("\n");
+}
+
+static void PrintTask(void *pvParameters)
+{
     for(;;)
     {
-        for (size_t i = 0; i < strlen(text); i++)
-        {
-            putchar(text[i]);
-            fflush(stdout);
-            vTaskDelay(pdMS_TO_TICKS(SYMBOL_PRINT_TIMEOUT)); 
-        }
-
-        printf("\n");
-        vTaskDelay(pdMS_TO_TICKS(PRINT_TIMEOUT));
+        _printf(OS, pvParameters);
+        #if (configUSE_PREEMPTION == 0)
+            taskYIELD();
+        #endif
     }
 }
 
 int main(void)
 {
     // Создаём две задачи с разными текстами
-    xTaskCreate(PrintTask, "Task1", 1000, "Task1", 1, NULL);
-    xTaskCreate(PrintTask, "Task2", 1000, "Task2", 1, NULL);
+    xTaskCreate(PrintTask, "Task1", 1000, "First task processing",   1, NULL);
+    xTaskCreate(PrintTask, "Task2", 1000, "Second task operate",     1, NULL);
 
     // Запуск планировщика
     vTaskStartScheduler();
@@ -91,8 +129,12 @@ int main(void)
     return 0;
 }
 ```
+
 ---
-## Настройка многозадачности в FreeRTOSConfig.h
+
+## Настройка многозадачности в `FreeRTOSConfig.h`
+
+Файл `FreeRTOSConfig.h` содержит можество параметров, определяющих поведение FreeRTOS. Описание ключевых полей приведено в таблице:
 
 | Параметр                 | Описание                                                                         | Пример                             |
 | ------------------------ | -------------------------------------------------------------------------------- | ---------------------------------- |
@@ -101,11 +143,22 @@ int main(void)
 | `configTICK_RATE_HZ`     | Частота тиков планировщика                                                       | `#define configTICK_RATE_HZ 1000`  |
 | `configMAX_PRIORITIES`   | Максимальное количество уровней приоритетов задач                                | `#define configMAX_PRIORITIES 5`   |
 
-Примечание: Для кооперативного режима можно использовать taskYIELD() внутри задачи для принудительного переключения.
-
 ---
 
 ## Объяснение параметров xTaskCreate
+
+`xTaskCreate()` - функция создания задачии во FreeRTOS.
+
+``` c
+ BaseType_t xTaskCreate( TaskFunction_t pvTaskCode,
+                         const char * const pcName,
+                         const configSTACK_DEPTH_TYPE uxStackDepth,
+                         void *pvParameters,
+                         UBaseType_t uxPriority,
+                         TaskHandle_t *pxCreatedTask
+                       );
+
+```
 
 | Параметр        | Описание                                                                                                                                    |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -116,8 +169,30 @@ int main(void)
 | `uxPriority`    | Приоритет задачи (0 = минимальный, чем выше, тем выше приоритет).                                                                           |
 | `pxCreatedTask` | Указатель на хэндл задачи (`TaskHandle_t`), можно использовать для управления задачей после создания (например, удалить или приостановить). |
 
+---
 
-## Путь до исполняемого файла
+## Примечания по работе
 
-rtos-labs/FreeRTOS/FreeRTOS/Demo
-/WIN32-MSVC/
+### Путь до исполняемого файла
+
+Расположенрие файла проекта `VS community` в стурктуре папок.
+
+``` bash
+
+{Путь до корня проекта}/rtos-labs/FreeRTOS/FreeRTOS/Demo/WIN32-MSVC/
+
+```
+
+### Клонирование проекта
+
+Клонирование репозитория соостоит из этапов (для консольной версии [git-scm.com](https://git-scm.com/)):
+
+0. Установть git;
+1. Перейти в папку предпологаемого хранени локальной копии репозитория;
+2. Клонировать репозиторий командой
+
+``` bash
+
+git clone "https://github.com/Kolonard/rtos-labs/tree/main"
+
+```
