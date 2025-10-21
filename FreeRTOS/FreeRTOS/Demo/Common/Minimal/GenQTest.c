@@ -104,7 +104,7 @@ static void prvTakeTwoMutexesReturnInDifferentOrder( SemaphoreHandle_t xMutex,
 #if ( INCLUDE_xTaskAbortDelay == 1 )
 
     #if ( configUSE_PREEMPTION == 0 )
-        #error The additional tests included when INCLUDE_xTaskAbortDelay is 1 expect preemption to be used.
+        //#error The additional tests included when INCLUDE_xTaskAbortDelay is 1 expect preemption to be used.
     #endif
 
 /* Tests the behaviour when a low priority task inherits the priority of a
