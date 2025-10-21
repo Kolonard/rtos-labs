@@ -79,8 +79,22 @@
  * If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
  * demo application will be built.  The comprehensive test and demo application is
  * implemented and described in main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
-#define LAB_1 0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
+
+#define LAB_NUMBER 1  // 0 - NOT lab, 1,2,3 - lab numbers
+
+#if (LAB_NUMBER == 1)
+    #include "lab1_precode.h"
+#elif (LAB_NUMBER == 2)
+    #include "lab2_precode.h"
+#elif (LAB_NUMBER == 3)
+    #include "lab3_precode.h"   
+#endif
+
+
+
+
+
 
 
 
@@ -184,25 +198,7 @@ static HANDLE xWindowsKeyboardInputThreadHandle = NULL;
 static int xKeyPressed = mainNO_KEY_PRESS_VALUE;
 
 /*-----------------------------------------------------------*/
-#define PRINT_TIMEOUT 1000
-#define SYMBOL_PRINT_TIMEOUT 10
-void PrintTask(void *pvParameters)
-{
-    const char *text = (const char *)pvParameters;
 
-    for(;;)
-    {
-        for (size_t i = 0; i < strlen(text); i++)
-        {
-            putchar(text[i]);
-            fflush(stdout);
-            vTaskDelay(pdMS_TO_TICKS(SYMBOL_PRINT_TIMEOUT)); 
-        }
-
-        printf("\n");
-        vTaskDelay(pdMS_TO_TICKS(PRINT_TIMEOUT));
-    }
-}
 
 
 int main( void )
@@ -249,17 +245,9 @@ int main( void )
     #if ( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
     {
         printf( "\nStarting the blinky demo.\r\n" );
-        #if (LAB_1 == 0)
-        {
-            main_blinky();
-        }
-        #else
-        {
-            xTaskCreate(PrintTask, "Task1", 1000, "Task1 in operate", 1, NULL);
-            xTaskCreate(PrintTask, "Task2", 1000, "Another Task2 in operate", 1, NULL);
-            vTaskStartScheduler();
-        }
-        #endif
+        //    main_blinky();
+        RTOSLabSetup(); 
+        vTaskStartScheduler();
     }
     #else
     {
