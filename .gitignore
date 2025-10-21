@@ -58,3 +58,4 @@ dkms.conf
 FreeRTOS/FreeRTOS/Demo/WIN32-MSVC/x64
 FreeRTOS/tools
 
+*.dump

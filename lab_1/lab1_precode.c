@@ -11,15 +11,18 @@
 #include "lab1_precode.h"
 
 
-static void _printf(void *input_string) 
+static void _printf(uint8_t source, void *input_string) 
 {
     const char *text = (const char *)input_string;
     for (size_t i = 0; i < strlen(text); i++)
     {
         putchar(text[i]);
         fflush(stdout);
+
         #if (configUSE_PREEMPTION == 1)
-            vTaskDelay(pdMS_TO_TICKS(SYMBOL_PRINT_TIMEOUT)); 
+            if (source == OS) {
+                vTaskDelay(pdMS_TO_TICKS(SYMBOL_PRINT_TIMEOUT));
+            }
         #endif
     }
     printf("\n");
@@ -30,7 +33,7 @@ static void PrintTask(void *pvParameters)
 {
     for(;;)
     {
-        _printf(pvParameters);
+        _printf(OS, pvParameters);
         #if (configUSE_PREEMPTION == 0)
             taskYIELD();
         #endif
@@ -38,9 +41,14 @@ static void PrintTask(void *pvParameters)
 }
 
 
+void FlushTask(void)
+{
+    for(;;){}
+}
+
 void RTOSLabSetup(void)
 {
-    xTaskCreate(PrintTask, "Task1", 1000, "Task1 in operate", 1, NULL);
-    xTaskCreate(PrintTask, "Task2", 1000, "Another Task2 in operate", 1, NULL);
+    xTaskCreate(PrintTask, "Task1", 1000, "Task1 in operate",           1, NULL);
+    xTaskCreate(PrintTask, "Task2", 1000, "Another Task2 in operate",   1, NULL);
 }
 
