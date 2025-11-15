@@ -79,7 +79,7 @@
  * If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
  * demo application will be built.  The comprehensive test and demo application is
  * implemented and described in main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
 
 #define LAB_NUMBER 2  // 0 - NOT lab, 1,2,3 - lab numbers
 
