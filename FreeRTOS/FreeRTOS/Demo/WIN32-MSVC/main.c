@@ -79,9 +79,9 @@
  * If mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is not 1 then the comprehensive test and
  * demo application will be built.  The comprehensive test and demo application is
  * implemented and described in main_full.c. */
-#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    0
+#define mainCREATE_SIMPLE_BLINKY_DEMO_ONLY    1
 
-#define LAB_NUMBER 1  // 0 - NOT lab, 1,2,3 - lab numbers
+#define LAB_NUMBER 2  // 0 - NOT lab, 1,2,3 - lab numbers
 
 #if (LAB_NUMBER == 1)
     #include "lab1_precode.h"
@@ -246,7 +246,14 @@ int main( void )
     {
         printf( "\nStarting the blinky demo.\r\n" );
         //    main_blinky();
-        RTOSLabSetup(); 
+        #if (LAB_NUMBER == 1)
+            RTOSLab1Setup(); 
+        #elif (LAB_NUMBER == 2)
+            RTOSLab2Setup(); 
+        #elif (LAB_NUMBER == 3)
+            // 3 lab placeholder
+        #endif
+        //RTOSLabSetup();
         vTaskStartScheduler();
     }
     #else

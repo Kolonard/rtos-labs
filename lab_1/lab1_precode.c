@@ -23,7 +23,7 @@ static void PrintTask(void *pvParameters)
     }
 }
 
-void RTOSLabSetup(void)
+void RTOSLab1Setup(void)
 {
     xTaskCreate(PrintTask, "Task1", 1000, "Task1 in operate",           1, NULL);
     xTaskCreate(PrintTask, "Task2", 1000, "Another Task2 in operate",   1, NULL);
