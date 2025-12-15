@@ -251,7 +251,7 @@ int main( void )
         #elif (LAB_NUMBER == 2)
             RTOSLab2Setup(); 
         #elif (LAB_NUMBER == 3)
-            // 3 lab placeholder
+            RTOSLab3Setup();
         #endif
         //RTOSLabSetup();
         vTaskStartScheduler();
