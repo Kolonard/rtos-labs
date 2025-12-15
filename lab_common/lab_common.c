@@ -20,7 +20,7 @@ void _printf(uint8_t source, void *input_string)
 
         #if (configUSE_PREEMPTION == 1)
             if (source == OS) {
-                vTaskDelay(pdMS_TO_TICKS(SYMBOL_PRINT_TIMEOUT));
+                taskYIELD();
             }
         #endif
     }
